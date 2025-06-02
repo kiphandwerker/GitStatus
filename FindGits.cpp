@@ -49,12 +49,12 @@ std::string getGitStatus(const fs::path &repoPath) {
     std::string base = runGitCommand(repoPath, "merge-base HEAD HEAD@{u}");
 
     if (local.empty() || remote.empty() || base.empty()) {
-        return "Error or no upstream";
+        return " NA";
     }
 
-    if (local == remote) return "Up to date";
-    if (local == base) return "Behind";
-    if (remote == base) return "Ahead";
+    if (local == remote) return " Up to date";
+    if (local == base) return " ***Behind***";
+    if (remote == base) return " Ahead";
     return "Diverged";
 }
 
@@ -138,8 +138,8 @@ int main() {
         maxFolderWidth += 2;
 
         outputFile << "  " << std::left << std::setw(maxFolderWidth) << "Folder"
-                << std::setw(8) << "GitHub"
-                << "Status" << "\n";
+                << std::setw(8) << " GitHub"
+                << " Status" << "\n";
         outputFile << "  " << std::string(maxFolderWidth, '-') << " "
                 << std::string(7, '-') << " "
                 << std::string(12, '-') << "\n";
@@ -147,7 +147,7 @@ int main() {
         // Print repo rows
         for (const auto &repo : repos) {
             std::string folderName = fs::path(repo.folderPath).filename().string();
-            std::string githubStatus = repo.isGitHubRepo ? "Yes" : "No";
+            std::string githubStatus = repo.isGitHubRepo ? " Yes" : " No";
 
             outputFile << "  " << std::left << std::setw(maxFolderWidth) << folderName
                     << std::setw(8) << githubStatus
