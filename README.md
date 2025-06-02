@@ -21,13 +21,6 @@ It outputs the results grouped by the first-level subfolder into a formatted `gi
 - Git installed and available in PATH
 - C++17 or later (uses `<filesystem>`)
 
-### Compile
-
-Use a C++17-compatible compiler. Example with g++:
-
-```bash
-g++ -std=c++17 -o main FindGits.cpp
-```
 
 ### Code highlights
 - Git Command Execution: Uses `_popen` to execute Git commands within each repository.
@@ -44,3 +37,32 @@ g++ -std=c++17 -o main FindGits.cpp
 - Assumes that Git is installed and configured properly on the system.
 
 - Only supports checking one root directory at a time.
+
+## Usage
+<ol>
+<li>Replace the path with the directory you'd like to search through
+
+```c
+    std::vector<std::string> searchRoots = {
+        "path/goes/here"
+    };
+```
+<li>Create an empty search.txt file in the same location as the path
+
+```bash
+touch path/goes/here/search.txt
+```
+
+<li>Use a C++17-compatible compiler. Example with g++:
+
+```bash
+g++ -std=c++17 -o main FindGits.cpp
+```
+## Optional
+- Create a .bat file so that you can easily run the .exe file
+
+```bat
+start "" "your/path/main.exe"
+```
+
+</ol>
