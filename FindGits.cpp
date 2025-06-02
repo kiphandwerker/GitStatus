@@ -129,7 +129,7 @@ int main() {
         outputFile << "\nGroup: " << group << "\n";
 
         for (const auto& repo : repos) {
-            outputFile << "  Path: " << repo.folderPath
+            outputFile << "  Folder: " << fs::path(repo.folderPath).filename().string()
                     << "\n  GitHub: " << (repo.isGitHubRepo ? "Yes" : "No")
                     << "\n  Status: " << repo.gitStatus << "\n";
         }
