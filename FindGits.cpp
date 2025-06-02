@@ -7,6 +7,7 @@
 #include <cstdlib>
 #include <sstream>
 #include <array>
+#include <iomanip>
 
 namespace fs = std::filesystem;
 
@@ -16,7 +17,7 @@ struct RepoInfo {
     std::string gitStatus;
 };
 
-std::string runGitCommand(const fs::path& repoPath, const std::string& cmd) {
+std::string runGitCommand(const fs::path &repoPath, const std::string &cmd) {
     std::string command = "cd /d \"" + repoPath.string() + "\" && git " + cmd + " 2>nul";
     std::array<char, 128> buffer;
     std::string result;
@@ -30,7 +31,7 @@ std::string runGitCommand(const fs::path& repoPath, const std::string& cmd) {
     return result;
 }
 
-bool containsGitHub(const fs::path& configPath) {
+bool containsGitHub(const fs::path &configPath) {
     std::ifstream configFile(configPath);
     std::string line;
     while (std::getline(configFile, line)) {
@@ -41,7 +42,7 @@ bool containsGitHub(const fs::path& configPath) {
     return false;
 }
 
-std::string getGitStatus(const fs::path& repoPath) {
+std::string getGitStatus(const fs::path &repoPath) {
     std::string fetch = runGitCommand(repoPath, "fetch");
     std::string local = runGitCommand(repoPath, "rev-parse HEAD");
     std::string remote = runGitCommand(repoPath, "rev-parse HEAD@{u}");
@@ -74,7 +75,7 @@ int main() {
         return 1;
     }
 
-    for (const auto& root : searchRoots) {
+    for (const auto &root : searchRoots) {
         fs::path startPath(root);
 
         if (!fs::exists(startPath)) {
@@ -85,7 +86,7 @@ int main() {
         std::cout << "Scanning " << startPath << " ..." << std::endl;
 
         try {
-            for (const auto& dirEntry : fs::recursive_directory_iterator(startPath, fs::directory_options::skip_permission_denied)) {
+            for (const auto &dirEntry : fs::recursive_directory_iterator(startPath, fs::directory_options::skip_permission_denied)) {
                 if (!dirEntry.is_directory()) continue;
 
                 fs::path fullPath = dirEntry.path();
@@ -103,14 +104,14 @@ int main() {
                     results.push_back({ fullPath.string(), isGitHub, status });
                 }
             }
-        } catch (const std::exception& ex) {
+        } catch (const std::exception &ex) {
             std::cerr << "Error scanning " << startPath << ": " << ex.what() << std::endl;
         }
     }
 
     // Display grouped results by first-level subfolder under startPath
     std::map<std::string, std::vector<RepoInfo>> grouped;
-        for (const auto& info : results) {
+        for (const auto &info : results) {
         fs::path fullPath(info.folderPath);
         fs::path relative = fs::relative(fullPath, searchRoots[0]);
         std::string groupName;
@@ -124,16 +125,37 @@ int main() {
         grouped[groupName].push_back(info);
     }
 
-    for (const auto& [group, repos] : grouped) {
-        // std::cout << "\nGroup: " << group << "\n";
+    for (const auto &[group, repos] : grouped) {
         outputFile << "\nGroup: " << group << "\n";
 
-        for (const auto& repo : repos) {
-            outputFile << "  Folder: " << fs::path(repo.folderPath).filename().string()
-                    << "\n  GitHub: " << (repo.isGitHubRepo ? "Yes" : "No")
-                    << "\n  Status: " << repo.gitStatus << "\n";
+        // Calculate max width for the Folder column
+        size_t maxFolderWidth = std::string("Folder").length(); // minimum width
+        for (const auto &repo : repos) {
+            std::string folderName = fs::path(repo.folderPath).filename().string();
+            maxFolderWidth = std::max(maxFolderWidth, folderName.length());
+        }
+
+        maxFolderWidth += 2;
+
+        outputFile << "  " << std::left << std::setw(maxFolderWidth) << "Folder"
+                << std::setw(8) << "GitHub"
+                << "Status" << "\n";
+        outputFile << "  " << std::string(maxFolderWidth, '-') << " "
+                << std::string(7, '-') << " "
+                << std::string(12, '-') << "\n";
+
+        // Print repo rows
+        for (const auto &repo : repos) {
+            std::string folderName = fs::path(repo.folderPath).filename().string();
+            std::string githubStatus = repo.isGitHubRepo ? "Yes" : "No";
+
+            outputFile << "  " << std::left << std::setw(maxFolderWidth) << folderName
+                    << std::setw(8) << githubStatus
+                    << repo.gitStatus << "\n";
         }
     }
+
+
     std::cout << "Git Status file written" << "\n";
 
     return 0;
