@@ -15,9 +15,6 @@ It outputs the results grouped by the first-level subfolder into a formatted `gi
 - Outputs results grouped by project or folder
 - Saves the report to a `git_repo_status.txt` file
 
-
-## Usage
-
 ### Prerequisites
 
 - Windows environment (uses `cd /d` and `_popen`)
