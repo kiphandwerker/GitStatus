@@ -60,7 +60,7 @@ std::string getGitStatus(const fs::path &repoPath) {
 
 int main() {
     std::vector<std::string> searchRoots = {
-        "path/goes/here"
+        "C:/Users/19018/OneDrive/Programs/"
     };
     std::vector<RepoInfo> results;
 
