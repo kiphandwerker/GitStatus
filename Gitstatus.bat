@@ -1,4 +1,5 @@
 @echo off
+:menu
 echo.
 echo What would you like to do?
 echo 1. Run the script
@@ -8,12 +9,16 @@ set /p choice=Enter your choice:
 
 if "%choice%"=="1" (
     echo Running the script...
-    start "" "C:/Users/19018/OneDrive/Programs/C/Cpp/Gitstatus/FindGits.exe"
+    start "" "C:/Users/jhandwer/OneDrive - St. Jude Children's Research Hospital/Programs/Cpp/FindGits/FindGits.exe"
+    goto menu
 ) else if "%choice%"=="2" (
     echo Opening file...
-    start "" "C:/Users/19018/OneDrive/Programs/git_repo_status.txt"
+    start "" "C:/Users/jhandwer/OneDrive - St. Jude Children's Research Hospital/Programs/git_repo_status.txt"
+    goto menu
 ) else if "%choice%"=="3" (
+    echo Exiting...
     exit
 ) else (
-    echo Invalid choice. Exiting.
+    echo Invalid choice.
+    goto menu
 )
