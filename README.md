@@ -47,11 +47,7 @@ It outputs the results grouped by the first-level subfolder into a formatted `gi
         "path/goes/here"
     };
 ```
-<li>Create an empty search.txt file in the same location as the path
-
-```bash
-touch path/goes/here/search.txt
-```
+Note: git_repo_status.txt will be created at the start of the search root.
 
 <li>Use a C++17-compatible compiler. Example with g++:
 
@@ -61,8 +57,31 @@ g++ -std=c++17 -o main FindGits.cpp
 ## Optional
 - Create a .bat file so that you can easily run the .exe file
 
-```bat
-start "" "your/path/main.exe"
+```bash
+@echo off
+:menu
+echo.
+echo What would you like to do?
+echo 1. Run the script
+echo 2. Open git_repo_status
+echo 3. Quit out of terminal
+set /p choice=Enter your choice: 
+
+if "%choice%"=="1" (
+    echo Running the script...
+    start "" "path/to/FindGits.exe"
+    goto menu
+) else if "%choice%"=="2" (
+    echo Opening file...
+    start "" "path/to/git_repo_status.txt"
+    goto menu
+) else if "%choice%"=="3" (
+    echo Exiting...
+    exit
+) else (
+    echo Invalid choice.
+    goto menu
+)
 ```
 
 </ol>
