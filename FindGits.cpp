@@ -52,7 +52,7 @@ std::string getGitStatus(const fs::path &repoPath) {
         return " NA";
     }
 
-    if (local == remote) return " Up to date";
+    if (local == remote) return " Current";
     if (local == base) return " ***Behind***";
     if (remote == base) return " Ahead";
     return "Diverged";
@@ -60,7 +60,7 @@ std::string getGitStatus(const fs::path &repoPath) {
 
 int main() {
     std::vector<std::string> searchRoots = {
-        "path/goes/here"
+        "C:/Users/jhandwer/OneDrive - St. Jude Children's Research Hospital/Programs"
     };
     std::vector<RepoInfo> results;
 
